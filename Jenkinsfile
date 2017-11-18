@@ -1,3 +1,5 @@
+#!groovy
+
 node {
     // Clean workspace before doing anything
     deleteDir()
