@@ -7,15 +7,24 @@ stage('build') {
         checkout scm
         def v = version()
         currentBuild.displayName = "${env.BRANCH_NAME}-${v}-${env.BUILD_NUMBER}"
-        mvn "clean verify"
+        //mvn "clean verify"
+        echo "clean verify"
     }
 }
 
-stage('build docker image') {
-    node {
-        mvn "clean package docker:build -DskipTests"
-    }
-}
+stage('checkout,Build & Assemble') { }
+                    stage ('Unit testing'){ }
+                    stage ('Quality-Control-Sonar-Qube'){ }
+                    stage ('Quality-Control-FindBugs') { }
+                    stage('Upload package to Artifactory'){ }
+                    stage ('Dashboard Deployment'){ }
+                    stage('Pipeline Successful'){ }
+
+// stage('build docker image') {
+//     node {
+//         mvn "clean package docker:build -DskipTests"
+//     }
+// }
 
 def branch_type = get_branch_type "${env.BRANCH_NAME}"
 def branch_deployment_environment = get_branch_deployment_environment branch_type
@@ -50,7 +59,7 @@ if (branch_type == "dev") {
         }
         node {
             sshagent(['f1ad0f5d-df0d-441a-bea0-fd2c34801427']) {
-                mvn("jgitflow:release-start")
+                echo  "gitFlow" //"mvn("jgitflow:release-start")"
             }
         }
     }
@@ -63,7 +72,7 @@ if (branch_type == "release") {
         }
         node {
             sshagent(['f1ad0f5d-df0d-441a-bea0-fd2c34801427']) {
-                mvn("jgitflow:release-finish -Dmaven.javadoc.skip=true -DnoDeploy=true")
+                echo  "gitFlow" //mvn("jgitflow:release-finish -Dmaven.javadoc.skip=true -DnoDeploy=true")
             }
         }
     }
@@ -76,7 +85,7 @@ if (branch_type == "hotfix") {
         }
         node {
             sshagent(['f1ad0f5d-df0d-441a-bea0-fd2c34801427']) {
-                mvn("jgitflow:hotfix-finish -Dmaven.javadoc.skip=true -DnoDeploy=true")
+                echo  "gitFlow" //mvn("jgitflow:hotfix-finish -Dmaven.javadoc.skip=true -DnoDeploy=true")
             }
         }
     }
